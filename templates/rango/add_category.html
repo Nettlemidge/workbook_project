@@ -1,11 +1,11 @@
-<!DOCTYPE html>
-<html>
+{% extends 'rango/base.html' %}
+{% load static %}
 
-<head>
-    <title>Rango</title>
-</head>
+{% block title_block %}
+    Add a new category.
+{% endblock %}
 
-<body>
+{% block body_block %}
     <h1>Add a Category.</h1>
     <div>
         <form id="category_form" method="post" action="{% url 'rango:add_category' %}">
@@ -21,6 +21,4 @@
             <input type="submit" name="submit" value="Create Category" />
         </form>
     </div>
-</body>
-
-</html>
+{% endblock %}
