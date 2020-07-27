@@ -6,6 +6,7 @@
 {% endblock %}
 
 {% block body_block %}
+{% if user.is_authentificated %}
     {% if category %}
     <h1>Add a Page to the {{ category.name }} Category.</h1>
     <div>
@@ -25,4 +26,7 @@
         Cannot add a page to the specified category as it does not exist.
     {% endif %}
     </div>
+{% else %}
+    <h1>You must be logged in to view this page!</h1>
+{% endif %}
 {% endblock %}

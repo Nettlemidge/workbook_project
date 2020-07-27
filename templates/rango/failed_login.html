@@ -1,0 +1,14 @@
+{% extends 'rango/base.html' %}
+{% load static %}
+
+{% block title_block %}
+    Login Failed.
+{% endblock %}
+
+{% block body_block %}
+{% if user_not_active %}
+    <h1>Your Rango account is disabled.</h1>
+{% else %}
+    <h1>Invalid login details supplied.</h1> <br />
+{% endif %}
+{% endblock %}
