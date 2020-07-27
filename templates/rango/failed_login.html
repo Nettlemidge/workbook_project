@@ -16,5 +16,6 @@
     {% if password_wrong %}
         <h1>Wrong password.</h1>
     {% endif %}
+    <a href="{% url 'rango:login' %}">Try again</a>
 {% endif %}
 {% endblock %}

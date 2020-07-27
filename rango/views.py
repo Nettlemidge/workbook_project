@@ -2,9 +2,10 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.contrib.auth import authenticate, login, logout
+#from django.contrib.sessions.models import Session
 from django.urls import reverse
-from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from datetime import datetime
 from rango.forms import CategoryForm
 from rango.forms import PageForm
 from rango.forms import UserForm
@@ -13,9 +14,28 @@ from rango.models import Category
 from rango.models import Page
 from rango.models import User, UserProfile
 
+def get_server_side_cookie(request, cookie, default_val=None):
+    val = request.session.get(cookie)
+    if not val:
+        val = default_val
+    return val
+
+
+def visitor_cookie_handler(request):
+    visits = int(get_server_side_cookie(request, 'visits', 1))
+    last_visit_cookie = get_server_side_cookie(request, 'last_visit', str(datetime.now()))
+    last_visit_time = datetime.strptime(last_visit_cookie[:-7], '%Y-%m-%d %H:%M:%S')
+
+    if (datetime.now() - last_visit_time).days > 0:
+        visits = visits + 1
+        request.session['last_visit'] = str(datetime.now())
+    else:
+        request.session['last_visit'] = last_visit_cookie
+    request.session['visits'] = visits
+
 
 def nopath(request):
-    return HttpResponseRedirect('/rango/index')
+    return HttpResponseRedirect('/rango/index')#render(request, 'rango/index.html', {})
 
 
 def index(request):
@@ -23,12 +43,17 @@ def index(request):
     page_list = Page.objects.order_by('-views')[:5]
     context_dict = {'categories': category_list,
                     'pages': page_list}
-    return render(request, 'rango/index.html', context=context_dict)
+
+    visitor_cookie_handler(request)
+    context_dict['visits'] = request.session['visits']
+
+    response = render(request, 'rango/index.html', context=context_dict)
+    return response
 
 
 def about(request):
-    print(request.method)
-    print(request.user)
+    #print(request.method)
+    #print(request.user)
     return render(request, 'rango/about.html', {})
 
 
