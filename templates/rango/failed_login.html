@@ -10,5 +10,11 @@
     <h1>Your Rango account is disabled.</h1>
 {% else %}
     <h1>Invalid login details supplied.</h1> <br />
+    {% if username_wrong %}
+        <h1>A user with the specified username does not exist.</h1>
+    {% endif %}
+    {% if password_wrong %}
+        <h1>Wrong password.</h1>
+    {% endif %}
 {% endif %}
 {% endblock %}

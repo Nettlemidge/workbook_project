@@ -114,9 +114,14 @@ def user_login(request):
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
+        username_wrong = False
+        password_wrong = False
 
         user = authenticate(username=username, password=password)
-
+        try:
+            fuckyou = User.objects.get(username=username)
+        except User.DoesNotExist:
+            username_wrong = True
 
         if user:
             if user.is_active:
@@ -126,7 +131,9 @@ def user_login(request):
                 user_not_active = True
                 return render(request, 'rango/failed_login.html', {'user_not_active' : user_not_active})#HttpResponse("Your Rango account is disabled.")
         else:
-            return render(request, 'rango/failed_login.html', {}) #{'username_wrong': username_wrong, 'password_wrong': password_wrong})#HttpResponse("Invalid login details supplied.")
+            if username_wrong == False: password_wrong = True
+
+            return render(request, 'rango/failed_login.html', {'username_wrong': username_wrong, 'password_wrong': password_wrong})#HttpResponse("Invalid login details supplied.")
     else:
         return render(request, 'rango/login.html', {})
 
